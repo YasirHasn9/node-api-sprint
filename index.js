@@ -35,16 +35,8 @@ server.use((req, res) => {
 	})
 })
 
-server.use((err, req, res, next) => {
-	console.log(err)
-	res.status(500).json({
-		message: "An internal error occurred, please try again later",
-	})
-})
-
-const host = "127.0.0.1"
 const port = 8080
 
-server.listen(port, host, () => {
-	console.log(`Running at http://${host}:${port}`)
+server.listen(port, () => {
+	console.log(`Running at http://localhost:${port}`)
 })
