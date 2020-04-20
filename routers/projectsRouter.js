@@ -20,4 +20,23 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  try {
+    if (!req.body.name && req.body.description) {
+      res.status(401).json({
+        message:
+          "Name and Description should be filled in order to create a project"
+      });
+    } else {
+      const newProject = await projectsDb.insert(req.body);
+      res.status(201).json(newProject);
+    }
+  } catch (err) {
+    console.log("this is from the post", err);
+    res.status(500).json({
+      message: "Can't create a new project"
+    });
+  }
+});
+
 module.exports = router;
