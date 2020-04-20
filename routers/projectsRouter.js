@@ -34,7 +34,21 @@ router.post("/", async (req, res) => {
   } catch (err) {
     console.log("this is from the post", err);
     res.status(500).json({
-      message: "Can't create a new project"
+      message: "Server issues"
+    });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  try {
+    if (req.params.id) {
+      const updateProject = await projectsDb.update(req.params.id, req.body);
+      res.status(201).json(updateProject);
+    }
+  } catch (err) {
+    console.log("PUT", err);
+    res.status(500).json({
+      message: "Server issues"
     });
   }
 });
