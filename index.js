@@ -12,3 +12,31 @@ I need this code, but don't know where, perhaps should make some middleware, don
 
 Go code!
 */
+
+const express = require("express");
+const helmet = require("helmet");
+const projectRouter = require("./routers/projectsRouter");
+const actionsRouter = require("./routers/actionsRouter");
+
+const server = express();
+server.use(helmet());
+server.use(express.json());
+
+server.get("/", (req, res) => {
+  res.send("<h2>Welcome to this Sprint</h2>");
+});
+
+server.use("/api/projects", projectRouter);
+server.use("/api/projects/:id/actions", actionsRouter);
+
+server.use((req, res) => {
+  res.status(404).json({
+    message: "Route was not found"
+  });
+});
+
+const port = 8080;
+
+server.listen(port, () => {
+  console.log(`Running at http://localhost:${port}`);
+});
