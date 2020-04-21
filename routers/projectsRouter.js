@@ -1,5 +1,6 @@
 const express = require("express");
 const projectsDb = require("../data/helpers/projectModel");
+const { validateProject } = require("../middlewars/validate");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -20,36 +21,21 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validateProject() , async (req, res , next) => {
   try {
-    if (!req.body.name && req.body.description) {
-      res.status(401).json({
-        message:
-          "Name and Description should be filled in order to create a project"
-      });
-    } else {
       const newProject = await projectsDb.insert(req.body);
       res.status(201).json(newProject);
-    }
   } catch (err) {
-    console.log("this is from the post", err);
-    res.status(500).json({
-      message: "Server issues"
-    });
+    next()
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", validateProject(), async (req, res, next) => {
   try {
-    if (req.params.id) {
-      const updateProject = await projectsDb.update(req.params.id, req.body);
-      res.status(201).json(updateProject);
-    }
+    const updateProject = await projectsDb.update(req.params.id, req.body);
+    res.status(201).json(updateProject);
   } catch (err) {
-    console.log("PUT", err);
-    res.status(500).json({
-      message: "Server issues"
-    });
+    next(err);
   }
 });
 
@@ -66,4 +52,22 @@ router.delete("/:id", async (req, res) => {
     });
   }
 });
+
+// router.get("/:id/actions", async (req, res) => {
+//   try {
+//     if (req.project.id) {
+//       const getActions = await projectsDb.getProjectActions(
+//         req.project.id
+//       );
+//       res.status(201).json(getActions);
+//     } else {
+//       res.status(500).json({ message: "wrong id" });
+//     }
+//   } catch (err) {
+//     console.log("PUT", err);
+//     res.status(500).json({
+//       message: "Server issues"
+//     });
+//   }
+// });
 module.exports = router;

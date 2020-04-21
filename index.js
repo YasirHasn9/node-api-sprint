@@ -17,26 +17,24 @@ const express = require("express");
 const helmet = require("helmet");
 const projectRouter = require("./routers/projectsRouter");
 
-const server = express()
-
-server.use(helmet())
-
-server.use(express.json())
+const server = express();
+server.use(helmet());
+server.use(express.json());
 
 server.get("/", (req, res) => {
-    res.send("<h2>Welcome to this Sprint</h2>")
-  })
+  res.send("<h2>Welcome to this Sprint</h2>");
+});
 
 server.use("/api/projects", projectRouter);
 
 server.use((req, res) => {
-	res.status(404).json({
-		message: "Route was not found",
-	})
-})
+  res.status(404).json({
+    message: "Route was not found"
+  });
+});
 
-const port = 8080
+const port = 8080;
 
 server.listen(port, () => {
-	console.log(`Running at http://localhost:${port}`)
-})
+  console.log(`Running at http://localhost:${port}`);
+});
