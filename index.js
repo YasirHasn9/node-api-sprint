@@ -16,6 +16,7 @@ Go code!
 const express = require("express");
 const helmet = require("helmet");
 const projectRouter = require("./routers/projectsRouter");
+const actionsRouter = require("./routers/actionsRouter");
 
 const server = express();
 server.use(helmet());
@@ -26,6 +27,7 @@ server.get("/", (req, res) => {
 });
 
 server.use("/api/projects", projectRouter);
+server.use("/api/projects/:id/actions", actionsRouter);
 
 server.use((req, res) => {
   res.status(404).json({

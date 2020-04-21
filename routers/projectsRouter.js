@@ -4,6 +4,7 @@ const {
   validateProject,
   validateProjectId
 } = require("../middlewars/validate");
+
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -47,35 +48,21 @@ router.put(
   }
 );
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validateProjectId(), async (req, res, next) => {
   try {
-    if (req.params.id) {
-      const deletedProject = await projectsDb.remove(req.params.id);
-      res.status(200).json(deletedProject);
-    }
+    const deletedProject = await projectsDb.remove(req.params.id);
+    res.status(200).json( deletedProject);
   } catch (err) {
-    console.log("Delete", err);
-    res.status(500).json({
-      message: "Server issues"
-    });
+    next(err);
   }
 });
 
-// router.get("/:id/actions", async (req, res) => {
+// router.get("/:id/actions", validateProjectId(), async (req, res, next) => {
 //   try {
-//     if (req.project.id) {
-//       const getActions = await projectsDb.getProjectActions(
-//         req.project.id
-//       );
-//       res.status(201).json(getActions);
-//     } else {
-//       res.status(500).json({ message: "wrong id" });
-//     }
+//     const getActions = await projectsDb.getProjectActions(req.project.id);
+//     res.status(201).json(getActions);
 //   } catch (err) {
-//     console.log("PUT", err);
-//     res.status(500).json({
-//       message: "Server issues"
-//     });
+//     next(err);
 //   }
 // });
 module.exports = router;
