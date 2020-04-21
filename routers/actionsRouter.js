@@ -26,6 +26,15 @@ router.post("/", validateProjectId(), async (req, res, next) => {
   }
 });
 
+router.put("/:action_id", validateProjectId(), async (req, res, next) => {
+  try {
+    let deleteAction = await actions.update(req.params.action_id, req.body);
+    res.json(deleteAction);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.delete("/:action_id", validateProjectId(), async (req, res, next) => {
   try {
     let deleteAction = await actions.remove(req.params.action_id);
