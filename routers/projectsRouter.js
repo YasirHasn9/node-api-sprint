@@ -1,6 +1,9 @@
 const express = require("express");
 const projectsDb = require("../data/helpers/projectModel");
-const { validateProject } = require("../middlewars/validate");
+const {
+  validateProject,
+  validateProjectId
+} = require("../middlewars/validate");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -21,23 +24,28 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", validateProject() , async (req, res , next) => {
+router.post("/", validateProject(), async (req, res, next) => {
   try {
-      const newProject = await projectsDb.insert(req.body);
-      res.status(201).json(newProject);
+    const newProject = await projectsDb.insert(req.body);
+    res.status(201).json(newProject);
   } catch (err) {
-    next()
+    next();
   }
 });
 
-router.put("/:id", validateProject(), async (req, res, next) => {
-  try {
-    const updateProject = await projectsDb.update(req.params.id, req.body);
-    res.status(201).json(updateProject);
-  } catch (err) {
-    next(err);
+router.put(
+  "/:id",
+  validateProject(),
+  validateProjectId(),
+  async (req, res, next) => {
+    try {
+      const updateProject = await projectsDb.update(req.params.id, req.body);
+      res.status(201).json(updateProject);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 router.delete("/:id", async (req, res) => {
   try {
