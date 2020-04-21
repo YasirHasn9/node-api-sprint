@@ -30,7 +30,20 @@ function validateProjectId() {
   };
 }
 
+function validateActionBody() {
+  return (req, res, next) => {
+    if (!req.params.id && !req.body.description && !req.body.notes) {
+      res.status(401).json({
+        message: "notes and description should be filled"
+      });
+    } else {
+      next();
+    }
+  };
+}
+
 module.exports = {
   validateProject,
-  validateProjectId
+  validateProjectId,
+  validateActionBody
 };

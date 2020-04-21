@@ -1,6 +1,9 @@
 const express = require("express");
 const actions = require("../data/helpers/actionModel");
-const { validateProjectId } = require("../middlewars/validate");
+const {
+  validateProjectId,
+  validateActionBody
+} = require("../middlewars/validate");
 const router = express.Router({ mergeParams: true });
 
 router.get("/", validateProjectId(), async (req, res, next) => {
@@ -35,13 +38,18 @@ router.put("/:action_id", validateProjectId(), async (req, res, next) => {
   }
 });
 
-router.delete("/:action_id", validateProjectId(), async (req, res, next) => {
-  try {
-    let deleteAction = await actions.remove(req.params.action_id);
-    res.json(deleteAction);
-  } catch (err) {
-    next(err);
+router.delete(
+  "/:action_id",
+  validateActionBody(),
+  validateProjectId(),
+  async (req, res, next) => {
+    try {
+      let deleteAction = await actions.remove(req.params.action_id);
+      res.json(deleteAction);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 module.exports = router;

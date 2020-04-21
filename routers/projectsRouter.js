@@ -56,13 +56,4 @@ router.delete("/:id", validateProjectId(), async (req, res, next) => {
     next(err);
   }
 });
-
-// router.get("/:id/actions", validateProjectId(), async (req, res, next) => {
-//   try {
-//     const getActions = await projectsDb.getProjectActions(req.project.id);
-//     res.status(201).json(getActions);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
 module.exports = router;
